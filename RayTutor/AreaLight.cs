@@ -1,0 +1,6 @@
+﻿namespace RayTutor
+{
+    class AreaLight
+    {
+    }
+}

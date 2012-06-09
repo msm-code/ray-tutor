@@ -1,0 +1,5 @@
+D:\Projects\C#\RayTutor\RayTutor\obj\Release\ResolveAssemblyReference.cache
+D:\Projects\C#\RayTutor\RayTutor\bin\Release\RayTutor.exe
+D:\Projects\C#\RayTutor\RayTutor\bin\Release\RayTutor.pdb
+D:\Projects\C#\RayTutor\RayTutor\obj\Release\RayTutor.exe
+D:\Projects\C#\RayTutor\RayTutor\obj\Release\RayTutor.pdb
