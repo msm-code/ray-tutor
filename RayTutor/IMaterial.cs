@@ -4,6 +4,6 @@ namespace RayTutor
 {
     interface IMaterial
     {
-        ColorRgb Radiance(Raytracer tracer, PointLight light, HitInfo hit);
+        ColorRgb Radiance(Raytracer tracer, LightInfo light, HitInfo hit);
     }
 }

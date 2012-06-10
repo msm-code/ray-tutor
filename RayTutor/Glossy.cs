@@ -18,7 +18,7 @@ namespace RayTutor
             this.exponent = exponent;
         }
 
-        public ColorRgb Radiance(Raytracer tracer, PointLight light, HitInfo hit)
+        public ColorRgb Radiance(Raytracer tracer, LightInfo light, HitInfo hit)
         {
             ColorRgb color = direct.Radiance(tracer, light, hit);
 

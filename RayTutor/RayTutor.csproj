@@ -46,7 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AreaLight.cs" />
+    <Compile Include="FlatArea.cs" />
+    <Compile Include="ISamplableShape.cs" />
+    <Compile Include="Light.cs" />
     <Compile Include="DiskDistributor.cs" />
     <Compile Include="ColorRgb.cs" />
     <Compile Include="Distributor.cs" />
@@ -60,8 +62,11 @@
     <Compile Include="ISampler.cs" />
     <Compile Include="IShape.cs" />
     <Compile Include="Jittered.cs" />
+    <Compile Include="LightInfo.cs" />
+    <Compile Include="Matrix3.cs" />
     <Compile Include="PerfectReflective.cs" />
     <Compile Include="Phong.cs" />
+    <Compile Include="Point.cs" />
     <Compile Include="PointLight.cs" />
     <Compile Include="Orthogonal.cs" />
     <Compile Include="OrthonormalBasis.cs" />
@@ -76,7 +81,8 @@
     <Compile Include="Regular.cs" />
     <Compile Include="Sphere.cs" />
     <Compile Include="SquareDistributor.cs" />
-    <Compile Include="FlatShape.cs" />
+    <Compile Include="FlatObject.cs" />
+    <Compile Include="TmpArea.cs" />
     <Compile Include="TriangleShape.cs" />
     <Compile Include="Vector2.cs" />
     <Compile Include="Vector3.cs" />

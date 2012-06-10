@@ -20,6 +20,7 @@ namespace RayTutor
             Bitmap bmp = new Bitmap(imageSize.Width, imageSize.Height);
 
             for (int y = 0; y < imageSize.Height; y++)
+            {
                 for (int x = 0; x < imageSize.Width; x++)
                 {
                     ColorRgb totalColor = ColorRgb.Black;
@@ -40,29 +41,37 @@ namespace RayTutor
                     bmp.SetPixel(x, y, StripColor(totalColor));
                 }
 
+                System.Console.WriteLine("{0}%, {1} Rays Tracked", (100 * y) / (float)imageSize.Height, ct);
+            }
+
             return bmp;
         }
 
+        int ct;
         public ColorRgb TraceRay(World world, Ray ray)
         { return this.TraceRay(world, ray, 0); }
 
         public ColorRgb TraceRay(World world, Ray ray, int currentDepth)
         {
+            ct++;
             if (currentDepth > MaxDepth) { return ColorRgb.Black; }
 
-            HitInfo info = world.TraceRay(ray);
-            info.Depth = currentDepth + 1;
+            HitInfo hit = world.TraceRay(ray);
+            hit.Depth = currentDepth + 1;
 
-            if (info.HitObject == null) { return world.BackgroundColor; }
+            if (hit.HitObject == null) { return world.BackgroundColor; }
 
             ColorRgb finalColor = ColorRgb.Black;
-            IMaterial material = info.HitObject.Material;
+            IMaterial material = hit.HitObject.Material;
 
             foreach (var light in world.Lights)
             {
-                if (world.AnyObstacleBetween(info.HitPoint, light.Position)) { continue; }
+                Ray rayFromLight = light.SampleRay(hit.HitPoint);
+                if (world.AnyObstacleBefore(hit.HitPoint, rayFromLight)) { continue; }
 
-                finalColor += material.Radiance(this, light, info);
+                LightInfo lightInfo = new LightInfo(rayFromLight.Origin, light.Color);
+
+                finalColor += material.Radiance(this, lightInfo, hit);
             }
 
             return finalColor;

@@ -10,24 +10,51 @@ namespace RayTutor
     {
         static void Main(string[] args)
         {
+            int sampleCt = 256;
+
             // Stworzenie świata (kolor tła = łagodny niebieski)
             World world = new World(Color.PowderBlue);
 
             // Materiały
-            IMaterial redMat = //new PerfectReflective(Color.LightCoral, 0.3, 30, 0.7);
-                new Phong(Color.LightCoral, 0.9, 200);
-            IMaterial greenMat = //new PerfectReflective(Color.LightGreen, 0.3, 30, 0.7);
-                              new Phong(Color.LightGreen, 0.9, 200);
-            IMaterial blueMat = //new PerfectReflective(Color.LightBlue, 0.3, 30, 0.7);
-                                new Phong(Color.LightBlue, 0.9, 200);
+            IMaterial redMat = new PerfectReflective(Color.LightCoral, 0.3, 30, 0.7);
+            IMaterial greenMat = new PerfectReflective(Color.LightGreen, 0.3, 30, 0.7);
+            IMaterial blueMat = new PerfectReflective(Color.LightBlue, 0.3, 30, 0.7);
             IMaterial grayMat = new PerfectReflective(Color.Gray, 0.3, 30, 0.7);
 
             // Trzy różnokolorowe kule
-            /*world.Add(new Sphere(new Vector3(-4, 0, 0), 2, redMat));
+            world.Add(new Sphere(new Vector3(-4, 0, 0), 2, redMat));
             world.Add(new Sphere(new Vector3(4, 0, 0), 2, greenMat));
-            world.Add(new Sphere(new Vector3(0, 0, 3), 2, blueMat));*/
+            world.Add(new Sphere(new Vector3(0, 0, 3), 2, blueMat));
+            world.Add(new Plane(new Vector3(0, -2, 0), new Vector3(0, 1, 0), grayMat));
 
-            world.Add(FlatShape.Triangle(new Vector3(3, -2, 2),
+            FlatObject fo =
+                FlatObject.Triangle(new Vector3(-5, 0.5, -1), new Vector3(0, 3.5, -1), new Vector3(5, 0.5, -1), grayMat);
+            world.Add(fo);
+
+            ISampler areas = new Jittered(sampleCt, 0);
+            DiskDistributor aread = new DiskDistributor(areas, 97);
+            world.AddLight(new Light(new TmpArea(aread, new Vector3(0, 10, -5), 3) , Color.White));
+            //world.AddLight(new Light(new Point(0, 5, -5), Color.White));
+
+            ICamera camera = new Pinhole(new Vector3(0, 1, -8),
+                new Vector3(0, 0, 0),
+                new Vector3(0, -1, 0),
+                1);
+
+            Raytracer tracer = new Raytracer();
+
+            SquareDistributor antiAlias = new SquareDistributor(new Regular(sampleCt), 1);
+
+            Bitmap image = tracer.Raytrace(world, camera, new Size(300, 300), antiAlias);
+
+            // Zapisanie obrazka w jakimś miłym miejscu na dysku.
+            image.Save("D:\\raytraced.png");
+
+            #region junks
+
+            /*
+             * 
+            /*world.Add(FlatShape.Triangle(new Vector3(3, -2, 2),
                 new Vector3(-3, -2, 2),
                 new Vector3(2, 3, 3), redMat));
             world.Add(FlatShape.Triangle(new Vector3(-3, -2, 2),
@@ -40,29 +67,9 @@ namespace RayTutor
 
             world.Add(FlatShape.Triangle(new Vector3(8, -2, 5), 
                 new Vector3(3, -2, 2),
-                new Vector3(2, 3, 3), blueMat));
+                new Vector3(2, 3, 3), blueMat));*/
 
-            world.Add(new Plane(new Vector3(0, -2, 0), new Vector3(0, 1, 0), grayMat));
-
-            world.AddLight(new PointLight(new Vector3(0, 5, -5), Color.White));
-
-            ICamera camera = new Pinhole(new Vector3(0, 1, -8),
-                new Vector3(0, 0, 0),
-                new Vector3(0, -1, 0),
-                1);
-
-            Raytracer tracer = new Raytracer();
-
-            SquareDistributor antiAlias = new SquareDistributor(new Regular(4), 1);
-
-            Bitmap image = tracer.Raytrace(world, camera, new Size(300, 300), antiAlias);
-
-            // Zapisanie obrazka w jakimś miłym miejscu na dysku.
-            image.Save("D:\\raytraced.png");
-
-            #region junks
-
-            /*
+             /* 
             ISampler test = new Jittered(64, 0);
             using (Bitmap b = new Bitmap(300, 300))
             {

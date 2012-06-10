@@ -9,7 +9,7 @@
             this.materialColor = materialColor;
         }
 
-        public ColorRgb Radiance(Raytracer tracer, PointLight light, HitInfo hit)
+        public ColorRgb Radiance(Raytracer tracer, LightInfo light, HitInfo hit)
         {
             Vector3 inDirection = (light.Position - hit.HitPoint).Normalized;
             double diffuseFactor = inDirection.Dot(hit.Normal);

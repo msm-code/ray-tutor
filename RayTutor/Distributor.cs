@@ -7,6 +7,8 @@ namespace RayTutor
     {
         Random r;
         List<T[]> sets;
+        int sampleNdx;
+        int setNdx;
 
         public Distributor()
         { 
@@ -19,13 +21,19 @@ namespace RayTutor
 
         public T[] Next()
         {
-            return sets[(int)(r.Next() % sets.Count)];
+            setNdx = r.Next(sets.Count);
+            return sets[setNdx];
         }
 
         public T Single()
         {
-            T[] set = Next();
-            return set[r.Next() % set.Length];
+            T sample = sets[setNdx][sampleNdx];
+
+            sampleNdx++;
+            if (sampleNdx >= sets[setNdx].Length)
+            { sampleNdx = 0; setNdx = r.Next(sets.Count); }
+
+            return sample;
         }
     }
 }

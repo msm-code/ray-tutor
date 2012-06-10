@@ -2,7 +2,7 @@
 {
     struct Ray
     {
-        public const double Epsilon = 0.00001;
+        public const double Epsilon = 0.0001;
         public const double Huge = double.MaxValue;
 
         public Ray(Vector3 origin, Vector3 direction)

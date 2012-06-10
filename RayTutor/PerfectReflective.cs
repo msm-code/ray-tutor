@@ -13,7 +13,7 @@
             this.reflectionColor = materialColor;
         }
 
-        public ColorRgb Radiance(Raytracer tracer, PointLight light, HitInfo hit)
+        public ColorRgb Radiance(Raytracer tracer, LightInfo light, HitInfo hit)
         {
             Vector3 toCameraDirection = -hit.Ray.Direction;
 

@@ -2,13 +2,13 @@
 
 namespace RayTutor
 {
-    class OrthogonalCamera : ICamera
+    class Orthogonal : ICamera
     {
         Vector3 eyePosition;
         double angle;
         Vector2 cameraSize;
 
-        public OrthogonalCamera(Vector3 eye, double angle, Vector2 size)
+        public Orthogonal(Vector3 eye, double angle, Vector2 size)
         {
             this.eyePosition = eye;
             this.angle = angle;
