@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Disk.cs" />
     <Compile Include="FlatArea.cs" />
     <Compile Include="ISamplableShape.cs" />
     <Compile Include="Light.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="PureRandom.cs" />
     <Compile Include="Ray.cs" />
     <Compile Include="Raytracer.cs" />
+    <Compile Include="Rectangle.cs" />
     <Compile Include="Regular.cs" />
     <Compile Include="Sphere.cs" />
     <Compile Include="SquareDistributor.cs" />

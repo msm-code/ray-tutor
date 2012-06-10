@@ -1,6 +1,6 @@
 ﻿namespace RayTutor
 {
-    class TriangleShape : IShape
+    class Triangle : IShape, ISamplableShape
     {
         // algorithm: http://www.blackpawn.com/texts/pointinpoly/default.html
 
@@ -15,7 +15,7 @@
         double dotBC;
         double dotBB;
 
-        public TriangleShape(Vector2 a, Vector2 b, Vector2 c)
+        public Triangle(Vector2 a, Vector2 b, Vector2 c)
         {
             this.a = a;
             this.b = b;
@@ -42,6 +42,18 @@
 
             // Check if point is in triangle
             return (u >= 0) && (v >= 0) && (u + v < 1);
+        }
+
+        public Vector2 SampleShapePoint(Vector2 sample)
+        {
+            if (sample.Y > sample.X)
+            {
+                double tmp = sample.Y;
+                sample.Y = sample.X;
+                sample.X = tmp;
+            }
+
+            return a + vB * sample.X + vC * sample.Y;
         }
     }
 }

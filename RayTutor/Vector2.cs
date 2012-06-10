@@ -43,6 +43,13 @@ namespace RayTutor
             return (this.X * vec.X + this.Y * vec.Y);
         }
 
+        public static Vector2 Rotate(Vector2 vector, double rotation)
+        {
+            return new Vector2(
+                vector.X * Math.Cos(rotation) - vector.Y * Math.Sin(rotation),
+                vector.Y * Math.Cos(rotation) + vector.X * Math.Sin(rotation));
+        }
+
         public double Length
         { get { return Math.Sqrt(X * X + Y * Y); } }
 
