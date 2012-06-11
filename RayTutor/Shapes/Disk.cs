@@ -1,6 +1,6 @@
 ﻿namespace RayTutor
 {
-    class Disk : IShape
+    class Disk : IShape, ISamplableShape
     {
         Vector2 origin;
         double radius;
@@ -15,6 +15,13 @@
         {
             Vector2 dist = point - origin;
             return dist.Length < radius;
+        }
+
+        public Vector2 SampleShapePoint(Vector2 sample)
+        {
+            Vector2 diskSample = DiskDistributor.MapSample(sample);
+
+            return origin + diskSample * radius;
         }
     }
 }

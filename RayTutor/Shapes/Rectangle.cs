@@ -1,6 +1,6 @@
 ﻿namespace RayTutor
 {
-    class Rectangle : IShape
+    class Rectangle : IShape, ISamplableShape
     {
         Vector2 center;
         Vector2 halfSize;
@@ -22,6 +22,12 @@
                 rotated.Y < -halfSize.Y || rotated.Y > halfSize.Y)
             { return false; }
             return true;
+        }
+
+        public Vector2 SampleShapePoint(Vector2 sample)
+        {
+            sample -= new Vector2(0.5, 0.5);
+            return center + new Vector2(sample.X * halfSize.X, sample.Y * halfSize.Y);
         }
     }
 }

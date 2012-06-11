@@ -4,7 +4,7 @@ namespace RayTutor
 {
     class Raytracer
     {
-        const int MaxDepth = 5; // Maksymalna dopuszczalna głębokość rekurencji
+        const int MaxDepth = 200; // Maksymalna dopuszczalna głębokość rekurencji
 
         public Bitmap Raytrace(World world, ICamera camera, Size imageSize)
         {
@@ -18,6 +18,8 @@ namespace RayTutor
             SquareDistributor antiAlias)
         {
             Bitmap bmp = new Bitmap(imageSize.Width, imageSize.Height);
+
+            int start = System.Environment.TickCount;
 
             for (int y = 0; y < imageSize.Height; y++)
             {
@@ -43,6 +45,8 @@ namespace RayTutor
 
                 System.Console.WriteLine("{0}%, {1} Rays Tracked", (100 * y) / (float)imageSize.Height, ct);
             }
+
+            System.Console.WriteLine("{0} ms per ray", (double)(System.Environment.TickCount - start) / ct);
 
             return bmp;
         }

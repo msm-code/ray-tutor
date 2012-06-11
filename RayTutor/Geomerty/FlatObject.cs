@@ -2,14 +2,14 @@
 {
     class FlatObject : GeometricObject
     {
-        Vector3 point;
+        Vector3 origin;
         Vector3 normal;
         OrthonormalBasis basis;
         IShape shape;
 
         private FlatObject(Vector3 anyPoint, Vector3 normal, IMaterial mat)
         {
-            this.point = anyPoint;
+            this.origin = anyPoint;
             this.normal = normal;
             this.basis = new OrthonormalBasis(normal, new Vector3(0, -1, 0));
 
@@ -18,7 +18,7 @@
 
         public FlatObject(IShape shape, Vector3 point, Vector3 normal, IMaterial mat)
         {
-            this.point = point;
+            this.origin = point;
             this.shape = shape;
             this.normal = normal;
             this.basis = new OrthonormalBasis(normal, new Vector3(0, 1, 0));
@@ -28,7 +28,7 @@
 
         public override bool HitTest(Ray ray, ref double distance, ref Vector3 outNormal)
         {
-            double t = (point - ray.Origin).Dot(normal) / ray.Direction.Dot(normal);
+            double t = (origin - ray.Origin).Dot(normal) / ray.Direction.Dot(normal);
 
             if (t <= Ray.Epsilon) { return false; }
 
@@ -49,7 +49,7 @@
             if (samplable == null)
             { throw new System.InvalidOperationException("Shape is not samplable"); }
 
-            return new FlatArea(samplable, basis.Invert(), distributor);
+            return new FlatArea(samplable, origin, basis.Invert(), distributor);
         }
 
         public static FlatObject Triangle(Vector3 a, Vector3 b, Vector3 c, IMaterial material)
@@ -85,9 +85,18 @@
             return result;
         }
 
+        public static FlatObject Mandelbrot(Vector3 center, Vector3 normal, double scale, double rotation, IMaterial material)
+        {
+            FlatObject result = new FlatObject(center, normal, material);
+
+            result.shape = new Mandelbrot(scale, rotation);
+
+            return result;
+        }
+
         Vector2 ToPlaneCoordinates(Vector3 point)
         {
-            Vector3 projected = basis * point;
+            Vector3 projected = basis * (point - this.origin);
             return new Vector2(projected.X, projected.Y);
         }
     }
