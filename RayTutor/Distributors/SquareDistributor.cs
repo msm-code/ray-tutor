@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-namespace RayTutor
+﻿namespace RayTutor
 {
     class SquareDistributor : Distributor<Vector2>
     {
-        public SquareDistributor(ISampler sampler, int setCt)
+        public SquareDistributor(ISampler sampler, int sampleCt, int setCt)
         {
-            for (int i = 0; i < setCt; i++)
-            { base.Add(sampler.Sample()); }
+            base.CreateSamples(sampler, (x) => x, sampleCt, setCt);
         }
     }
 }

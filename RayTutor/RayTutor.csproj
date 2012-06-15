@@ -47,15 +47,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cameras\ThinLens.cs" />
+    <Compile Include="Distributors\DiskDistributor.cs" />
+    <Compile Include="Distributors\HemisphereDistributor.cs" />
+    <Compile Include="Distributors\SquareDistributor.cs" />
+    <Compile Include="Geomerty\Face.cs" />
+    <Compile Include="Geomerty\Mesh.cs" />
+    <Compile Include="Materials\Transparent.cs" />
+    <Compile Include="Meshes\MeshInfo.cs" />
+    <Compile Include="Meshes\ObjLoaderContext.cs" />
+    <Compile Include="Meshes\ObjMeshLoader.cs" />
+    <Compile Include="Renderer\ConsoleRenderer.cs" />
+    <Compile Include="Samplers\NRooks.cs" />
     <Compile Include="Shapes\Disk.cs" />
     <Compile Include="Areas\FlatArea.cs" />
-    <Compile Include="Areas\ISamplableShape.cs" />
+    <Compile Include="Areas\IArea2d.cs" />
     <Compile Include="Light.cs" />
-    <Compile Include="Distributors\DiskDistributor.cs" />
     <Compile Include="ColorRgb.cs" />
     <Compile Include="Distributors\Distributor.cs" />
     <Compile Include="Materials\Glossy.cs" />
-    <Compile Include="Distributors\HemisphereDistributor.cs" />
     <Compile Include="Areas\IArea.cs" />
     <Compile Include="Cameras\ICamera.cs" />
     <Compile Include="Geomerty\GeometricObject.cs" />
@@ -84,9 +93,11 @@
     <Compile Include="Shapes\Rectangle.cs" />
     <Compile Include="Samplers\Regular.cs" />
     <Compile Include="Geomerty\Sphere.cs" />
-    <Compile Include="Distributors\SquareDistributor.cs" />
     <Compile Include="Geomerty\FlatObject.cs" />
     <Compile Include="Shapes\Triangle.cs" />
+    <Compile Include="Textures\Checker.cs" />
+    <Compile Include="Textures\ConstColor.cs" />
+    <Compile Include="Textures\ITexture.cs" />
     <Compile Include="Vector2.cs" />
     <Compile Include="Vector3.cs" />
     <Compile Include="World.cs" />

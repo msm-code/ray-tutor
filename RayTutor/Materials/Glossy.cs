@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace RayTutor
 {
     class Glossy : IMaterial

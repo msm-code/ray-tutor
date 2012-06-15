@@ -3,16 +3,14 @@ namespace RayTutor
 {
     class PureRandom : ISampler
     {
-        int sampleCt;
         Random r;
 
-        public PureRandom(int sampleCt, int seed)
+        public PureRandom(int seed)
         {
-            this.sampleCt = sampleCt;
             this.r = new Random(seed);
         }
 
-        public Vector2[] Sample()
+        public Vector2[] Sample(int sampleCt)
         {
             Vector2[] samples = new Vector2[sampleCt];
 

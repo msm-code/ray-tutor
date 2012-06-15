@@ -2,6 +2,6 @@
 {
     interface ISamplableShape
     {
-        Vector2 SampleShapePoint(Vector2 sample);
+        Vector2 SamplePoint(Vector2 sample);
     }
 }

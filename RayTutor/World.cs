@@ -8,7 +8,7 @@ namespace RayTutor
         List<GeometricObject> objects;
         List<Light> lights;
 
-        public World(Color background)
+        public World(ColorRgb background)
         {
             this.BackgroundColor = background;
             this.objects = new List<GeometricObject>();
@@ -74,7 +74,7 @@ namespace RayTutor
                 // jeśli jakiś obiekt jest na drodze promienia oraz trafienie
                 // nastąpiło bliżej niż odległość punktu do światła,
                 // obiekt jest w cieniu
-                if (obj.HitTest(rayAB, ref currDistance, ref ignoredNormal) && currDistance < distAB - Ray.Epsilon)
+                if (obj.HitTest(rayAB, ref currDistance, ref ignoredNormal) && currDistance < distAB)
                 { return true; }
             }
 

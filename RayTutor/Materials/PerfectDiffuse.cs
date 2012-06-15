@@ -16,6 +16,8 @@
 
             if (diffuseFactor < 0) { return ColorRgb.Black; }
 
+            if (hit.World.AnyObstacleBetween(hit.HitPoint, light.Position)) { return ColorRgb.Black; }
+
             return light.Color * materialColor * diffuseFactor;
         }
     }

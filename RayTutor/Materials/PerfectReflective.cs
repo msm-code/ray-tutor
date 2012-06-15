@@ -26,7 +26,8 @@
 
             luminance += tracer.TraceRay(hit.World, reflectedRay, hit.Depth) *
                 reflectionColor *
-                reflectionFactor * lambertFactor;
+                reflectionFactor *
+                lambertFactor;
 
             return luminance;
         }

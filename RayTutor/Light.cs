@@ -12,10 +12,10 @@
 
         public ColorRgb Color { get; set; }
 
-        public Ray SampleRay(Vector3 point)
+        public Vector3 Sample(Vector3 point)
         {
             Vector3 origin = area.SamplePoint();
-            return new Ray(origin, point - origin);
+            return origin;
         }
     }
 }

@@ -44,7 +44,7 @@
             return (u >= 0) && (v >= 0) && (u + v < 1);
         }
 
-        public Vector2 SampleShapePoint(Vector2 sample)
+        public Vector2 SamplePoint(Vector2 sample)
         {
             if (sample.Y > sample.X)
             {

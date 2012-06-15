@@ -5,30 +5,31 @@ namespace RayTutor
 {
     class HemisphereDistributor : Distributor<Vector3>
     {
-        public HemisphereDistributor(ISampler sampler, int setCt, double exponent)
+        double exponent;
+
+        public HemisphereDistributor(ISampler sampler, double exponent, int sampleCt, int setCt)
         {
-            for (int i = 0; i < setCt; i++)
+            this.exponent = exponent;
+
+            base.CreateSamples(sampler, (x) => MapSamples(x), sampleCt, setCt);
+        }
+
+        public Vector3[] MapSamples(Vector2[] samples)
+        {
+            return samples.Select((sample) =>
             {
-                var samples = sampler.Sample()
-                    .Select((x) => MapSample(x, exponent))
-                    .ToArray();
+                double cosPhi = Math.Cos(2 * Math.PI * sample.X);
+                double sinPhi = Math.Sin(2 * Math.PI * sample.X);
+                double cosTheta = Math.Pow(1 - sample.Y, 1 / (exponent + 1));
+                double sinTheta = Math.Sqrt(1 - cosTheta * cosTheta);
 
-                base.Add(samples);
-            }
+                double u = sinTheta * cosPhi;
+                double v = sinTheta * sinPhi;
+                double w = cosTheta;
+
+                return new Vector3(u, v, w);
+            }).ToArray();
         }
 
-        public static Vector3 MapSample(Vector2 sample, double exp)
-        {
-            double cosPhi = Math.Cos(2 * Math.PI * sample.X);
-            double sinPhi = Math.Sin(2 * Math.PI * sample.X);
-            double cosTheta = Math.Pow(1 - sample.Y, 1 / (exp + 1));
-            double sinTheta = Math.Sqrt(1 - cosTheta * cosTheta);
-
-            double u = sinTheta * cosPhi;
-            double v = sinTheta * sinPhi;
-            double w = cosTheta;
-
-            return new Vector3(u, v, w);
-        }
     }
 }

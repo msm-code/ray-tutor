@@ -4,17 +4,16 @@ namespace RayTutor
 {
     class Jittered : ISampler
     {
-        int sampleRow;
         Random r;
 
-        public Jittered(int sampleCt, int seed)
+        public Jittered(int seed)
         {
-            this.sampleRow = (int)Math.Sqrt(sampleCt);
             this.r = new Random(seed);
         }
 
-        public Vector2[] Sample()
+        public Vector2[] Sample(int sampleCt)
         {
+            int sampleRow = (int)Math.Sqrt(sampleCt);
             Vector2[] result = new Vector2[sampleRow * sampleRow];
 
             for (int x = 0; x < sampleRow; x++)

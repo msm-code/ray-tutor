@@ -3,26 +3,25 @@ using System;
 
 namespace RayTutor
 {
-    abstract class Distributor<T>
+    class Distributor<T>
     {
         Random r;
         List<T[]> sets;
         int sampleNdx;
         int setNdx;
 
-        public Distributor()
-        { 
-            sets = new List<T[]>();
-            r = new Random(0);
-        }
+        protected Distributor() { }
 
-        protected void Add(T[] set)
-        { sets.Add(set); }
-
-        public T[] Next()
+        protected void CreateSamples(ISampler sampler, Func<Vector2[], T[]> mapSamples, int sampleCt, int setCt)
         {
-            setNdx = r.Next(sets.Count);
-            return sets[setNdx];
+            sets = new List<T[]>(setCt);
+            r = new Random(0);
+            SampleCount = sampleCt;
+
+            for (int i = 0; i < setCt; i++)
+            {
+                sets.Add(mapSamples(sampler.Sample(sampleCt)));
+            }
         }
 
         public T Single()
@@ -35,5 +34,8 @@ namespace RayTutor
 
             return sample;
         }
+
+        public int SampleCount { get; private set; }
+        public int SetCount { get { return sets.Count; } }
     }
 }

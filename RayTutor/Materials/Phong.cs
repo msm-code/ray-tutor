@@ -3,13 +3,16 @@ namespace RayTutor
 {
     class Phong : IMaterial
     {
-        ColorRgb materialColor;
+        ITexture texture;
         double diffuseCoeff;
         double specularExponent;
 
         public Phong(ColorRgb materialColor, double diffuse, double exponent)
+            : this(new ConstColor(materialColor), diffuse, exponent) { }
+
+        public Phong(ITexture texture, double diffuse, double exponent)
         {
-            this.materialColor = materialColor;
+            this.texture = texture;
             this.diffuseCoeff = diffuse;
             this.specularExponent = exponent;
         }
@@ -21,12 +24,15 @@ namespace RayTutor
 
             if (lambertFactor < 0) { return ColorRgb.Black; }
 
+            if (hit.World.AnyObstacleBetween(hit.HitPoint, light.Position)) { return ColorRgb.Black; }
+
+            ColorRgb materialColor = texture.Get(hit);
             ColorRgb result = light.Color * materialColor * lambertFactor * diffuseCoeff;
 
             double phongFactor = PhongFactor(inDirection, hit.Normal, -hit.Ray.Direction);
 
-            if (phongFactor > 0)
-            { result += materialColor * Math.Pow(phongFactor, specularExponent); }
+            if (phongFactor != 0)
+            { result += materialColor * phongFactor; }
 
             return result;
         }
@@ -34,7 +40,11 @@ namespace RayTutor
         double PhongFactor(Vector3 inDirection, Vector3 normal, Vector3 toCameraDirection)
         {
             Vector3 reflected = Vector3.Reflect(inDirection, normal);
-            return reflected.Dot(toCameraDirection);
+            double cosAngle = reflected.Dot(toCameraDirection);
+
+            if (cosAngle <= 0) { return 0; }
+
+            return Math.Pow(cosAngle, specularExponent);
         }
     }
 }

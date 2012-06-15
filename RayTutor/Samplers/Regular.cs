@@ -4,15 +4,9 @@ namespace RayTutor
 {
     class Regular : ISampler
     {
-        int sampleRow;
-
-        public Regular(int sampleCt)
+        public Vector2[] Sample(int sampleCt)
         {
-            this.sampleRow = (int)Math.Sqrt(sampleCt);
-        }
-
-        public Vector2[] Sample()
-        {
+            int sampleRow = (int)Math.Sqrt(sampleCt);
             Vector2[] result = new Vector2[sampleRow * sampleRow];
 
             for (int x = 0; x < sampleRow; x++)

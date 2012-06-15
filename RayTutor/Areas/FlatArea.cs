@@ -18,7 +18,7 @@
         public Vector3 SamplePoint()
         {
             Vector2 sample = distributor.Single();
-            Vector2 shapePoint = shape.SampleShapePoint(sample);
+            Vector2 shapePoint = shape.SamplePoint(sample);
 
             return origin + inverse * new Vector3(shapePoint.X, 0, shapePoint.Y);
         }

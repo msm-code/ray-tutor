@@ -24,7 +24,7 @@
             return true;
         }
 
-        public Vector2 SampleShapePoint(Vector2 sample)
+        public Vector2 SamplePoint(Vector2 sample)
         {
             sample -= new Vector2(0.5, 0.5);
             return center + new Vector2(sample.X * halfSize.X, sample.Y * halfSize.Y);
