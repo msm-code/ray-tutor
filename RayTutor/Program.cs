@@ -5,6 +5,7 @@ using System.Text;
 using System.Drawing;
 using RayTutor.Meshes;
 using RayTutor.Geomerty;
+using RayTutor.Transformations;
 
 namespace RayTutor
 {
@@ -13,7 +14,7 @@ namespace RayTutor
         static void Main(string[] args)
         {
             const int SampleCt = 1;
-            const int MaxDepth = 4;
+            const int MaxDepth = 5;
             //const int ImageSize = 100;
 
             World world = new World(Color.PowderBlue);
@@ -21,35 +22,48 @@ namespace RayTutor
             SquareDistributor antiAlias = new SquareDistributor(new Regular(), SampleCt, 1);
 
             IMaterial transparentMat = new Transparent(Color.White, 0.5, 2500, 0.1, 1.5, 0.75);
-            IMaterial redMat = new PerfectReflective(Color.LightCoral, 0.1, 300, 0.9);
+            IMaterial redMat = new PerfectReflective(Color.LightCoral, 0.8, 300, 0.2);
             IMaterial greenMat = new PerfectReflective(Color.LightGreen, 0.1, 300, 0.9);
             IMaterial blueMat = new PerfectReflective(Color.LightBlue, 0.1, 300, 0.9);
             IMaterial planeMat = new PerfectReflective(Color.White, 0.5, 300, 0.5);
 
-            world.Add(new Sphere(new Vector3(40, 10, 20), 17, greenMat));
-            world.Add(new Sphere(new Vector3(-3, 1.7, 4), 1, blueMat));
-            world.Add(new Sphere(new Vector3(4, -3, 4), 1, redMat));
+            world.Add(new Sphere(new Vector3(-4, 0, 0), 2, greenMat));
+            world.Add(new Sphere(new Vector3(4, 0, 0), 2, redMat));
 
-            ObjMeshLoader loader = new ObjMeshLoader();
+            var transformation = new Transformation().Scale(1, 2, 1);
+            var instanced = new Sphere(new Vector3(0, 0, 0), 2, blueMat);
+            world.Add(transformation.Transform(instanced));
+
+            //world.Add(new Instance(new Sphere(new Vector3(0, 0, 0), 2, greenMat))
+                //.Scale(1, 2, 1).Translate(5, 2, 0));
+            //world.Add(new Instance(new Sphere(new Vector3(0, 0, 0), 2, blueMat))
+                //.Scale(1, 2, 1).Translate(0, 2, 2));
+
+            
+            /*ObjMeshLoader loader = new ObjMeshLoader();
             var meshData = loader.Load("mesh.obj");
+            var transformation = new Transformation();
+            TransformedGroup group = new TransformedGroup(transformation.Matrix);
             foreach (var face in meshData.Faces)
             {
-                world.Add(new Face(face.A, face.B, face.C, transparentMat));
+                var instanced = new Face(face.A, face.B, face.C, transparentMat);
+                world.Add(instanced);
             }
+            world.Add(group);*/
 
-            world.Add(new Plane(new Vector3(0, 0, 3), new Vector3(0, 0, 1), planeMat));
+            world.Add(new Plane(new Vector3(0, -2, 0), new Vector3(0, 1, 0), planeMat));
 
-            world.AddLight(new Light(new Point(-10, 3, 10), ColorRgb.White));
+            world.AddLight(new Light(new Point(0, 10, 0), ColorRgb.White));
 
-            ICamera camera = new Pinhole(new Vector3(-14, -3, 3.5),
-                new Vector3(0, 0, 9),
-                new Vector3(0, 0, -1),
-                new Vector2(1280/1024f, 1),
+            ICamera camera = new Pinhole(new Vector3(0, 3, -12),
+                new Vector3(0, 0, 0),
+                new Vector3(0, -1, 0),
+                new Vector2(1280 / 1024f, 1),
                 2);
 
             Renderer renderer = new Renderer(MaxDepth);
 
-            Bitmap image = renderer.Raytrace(world, camera, new Size(1280/2, 1024/2), antiAlias);
+            Bitmap image = renderer.Raytrace(world, camera, new Size(1280/4, 1024/4), antiAlias);
 
             // Zapisanie obrazka w jakimś miłym miejscu na dysku.
             image.Save("D:\\raytraced.png");

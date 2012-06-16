@@ -58,6 +58,28 @@ namespace RayTutor
             return normal * dot * 2 - vec;
         }
 
+        /*public static Vector3 ComponentMin(Vector3 a, Vector3 b)
+        {
+            return new Vector3(
+                a.X < b.X ? a.X : b.X,
+                a.Y < b.Y ? a.Y : b.Y,
+                a.Z < b.Z ? a.Z : b.Z);
+        }
+
+        public static Vector3 ComponentMax(Vector3 a, Vector3 b)
+        {
+            return new Vector3(
+                a.X < b.X ? b.X : a.X,
+                a.Y < b.Y ? b.Y : a.Y,
+                a.Z < b.Z ? b.Z : a.Z);
+        }
+
+        public static Vector3 ComponentMul(Vector3 a, Vector3 b)
+        { return new Vector3(a.X * b.X, a.Y * b.Y, a.Z * b.Z); }
+
+        public static Vector3 ComponentDiv(Vector3 a, Vector3 b)
+        { return new Vector3(a.X / b.X, a.Y / b.Y, a.Z / b.Z); }*/
+
         public double Length
         { get { return Math.Sqrt(X * X + Y * Y + Z * Z); } }
 

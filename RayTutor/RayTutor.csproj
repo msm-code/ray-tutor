@@ -51,8 +51,12 @@
     <Compile Include="Distributors\HemisphereDistributor.cs" />
     <Compile Include="Distributors\SquareDistributor.cs" />
     <Compile Include="Geomerty\Face.cs" />
+    <Compile Include="Geomerty\Octree.cs" />
+    <Compile Include="Geomerty\TransformedGroup.cs" />
+    <Compile Include="Geomerty\TransformedObject.cs" />
     <Compile Include="Geomerty\Mesh.cs" />
     <Compile Include="Materials\Transparent.cs" />
+    <Compile Include="Transformations\Matrix.cs" />
     <Compile Include="Meshes\MeshInfo.cs" />
     <Compile Include="Meshes\ObjLoaderContext.cs" />
     <Compile Include="Meshes\ObjMeshLoader.cs" />
@@ -98,6 +102,7 @@
     <Compile Include="Textures\Checker.cs" />
     <Compile Include="Textures\ConstColor.cs" />
     <Compile Include="Textures\ITexture.cs" />
+    <Compile Include="Transformations\Transformation.cs" />
     <Compile Include="Vector2.cs" />
     <Compile Include="Vector3.cs" />
     <Compile Include="World.cs" />

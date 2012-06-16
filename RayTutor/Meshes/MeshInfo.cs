@@ -11,9 +11,9 @@ namespace RayTutor.Meshes
             this.C = c;
         }
 
-        public Vector3 A { get; private set; }
-        public Vector3 B { get; private set; }
-        public Vector3 C { get; private set; }
+        public Vector3 A { get; set; }
+        public Vector3 B { get; set; }
+        public Vector3 C { get; set; }
     }
 
     class MeshInfo
