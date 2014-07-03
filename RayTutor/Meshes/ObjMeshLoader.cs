@@ -5,7 +5,7 @@ namespace RayTutor.Meshes
 {
     class ObjMeshLoader
     {
-        delegate void LoaderAction(ObjLoaderContext context, string[] args);
+        delegate void LoaderAction(MeshInfo context, string[] args);
 
         Dictionary<string, LoaderAction> actions;
 
@@ -25,7 +25,7 @@ namespace RayTutor.Meshes
 
         public MeshInfo Load(StreamReader data)
         {
-            ObjLoaderContext context = new ObjLoaderContext();
+            MeshInfo context = new MeshInfo();
 
             foreach (var line in LogicalLines(data))
             {
@@ -41,37 +41,23 @@ namespace RayTutor.Meshes
                 actions[action](context, args);
             }
 
-            return new MeshInfo(context.Faces);
+            return context;
         }
 
-        void VertexAction(ObjLoaderContext context, string[] args)
+        void VertexAction(MeshInfo ctx, string[] args)
         {
-            context.Verticles.Add(new Vector3(Read(args[0]), Read(args[1]), Read(args[2])));
+            ctx.AddVertex(ReadD(args[0]), ReadD(args[1]), ReadD(args[2]));
         }
 
-        void FaceAction(ObjLoaderContext ctx, string[] args)
+        void FaceAction(MeshInfo ctx, string[] args)
         {
             for (int i = 1; i < args.Length - 1; i++)
-            { AddFace(ctx, ReadVertex(args[0]), ReadVertex(args[i]), ReadVertex(args[i + 1])); }
+            { ctx.AddFace(ReadI(args[0]), ReadI(args[i]), ReadI(args[i + 1])); }
         }
 
-        void AddFace(ObjLoaderContext ctx, int ndxA, int ndxB, int ndxC)
-        {
-            Func<int, int> absoluteIndex = (x) => x < 0 ? ctx.Verticles.Count + x : x - 1;
+        int ReadI(string text) { return int.Parse(text); }
 
-            ctx.Faces.Add(new FaceData(
-                ctx.Verticles[absoluteIndex(ndxA)],
-                ctx.Verticles[absoluteIndex(ndxB)],
-                ctx.Verticles[absoluteIndex(ndxC)]));
-        }
-
-        int ReadVertex(string text)
-        {
-            string vertex = text.Split('/')[0];
-            return int.Parse(vertex);
-        }
-
-        double Read(string text) { return double.Parse(text, System.Globalization.CultureInfo.InvariantCulture); }
+        double ReadD(string text) { return double.Parse(text, System.Globalization.CultureInfo.InvariantCulture); }
 
         IEnumerable<string> LogicalLines(StreamReader data)
         {

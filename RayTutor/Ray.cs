@@ -19,5 +19,7 @@
         {
             return Origin + Direction * t;
         }
+
+        public static bool IsValid(double t) { return t > Epsilon && t < Huge; }
     }
 }

@@ -17,20 +17,14 @@ namespace RayTutor
             if (currentDepth >= maxDepth) { return ColorRgb.Black; }
 
             HitInfo hit = world.TraceRay(ray);
+            if (hit == null) { return world.BackgroundColor; }
+
             hit.Depth = currentDepth + 1;
 
-            if (hit.HitObject == null) { return world.BackgroundColor; }
-
             ColorRgb finalColor = ColorRgb.Black;
-            IMaterial material = hit.HitObject.Material;
+            IMaterial material = hit.Material;
 
-            foreach (var light in world.Lights)
-            {
-                Vector3 lightRayOrigin = light.Sample(hit.HitPoint);
-                LightInfo lightInfo = new LightInfo(lightRayOrigin, light.Color);
-
-                finalColor += material.Radiance(this, lightInfo, hit);
-            }
+            finalColor += material.Shade(this, hit);
 
             return finalColor;
         }

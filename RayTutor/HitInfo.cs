@@ -1,10 +1,11 @@
 ﻿using System.Drawing;
+
 namespace RayTutor
 {
     class HitInfo
     {
         /// <summary>Trafiony obiekt lub null jeśli promień w nic nie trafił</summary>
-        public GeometricObject HitObject { get; set; }
+        public IMaterial Material { get; set; }
 
         /// <summary>Referencja do świata który renderujemy</summary>
         public World World { get; set; }

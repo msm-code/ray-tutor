@@ -6,6 +6,7 @@ using System.Drawing;
 using RayTutor.Meshes;
 using RayTutor.Geomerty;
 using RayTutor.Transformations;
+using RayTutor.Areas;
 
 namespace RayTutor
 {
@@ -13,61 +14,85 @@ namespace RayTutor
     {
         static void Main(string[] args)
         {
-            const int SampleCt = 1;
+            const int SampleCt = 25;
             const int MaxDepth = 5;
-            //const int ImageSize = 100;
+            const int ImageSize = 256;
 
-            World world = new World(Color.PowderBlue);
+            World world = new World(new ColorRgb(0.0, 0, 0));
 
-            SquareDistributor antiAlias = new SquareDistributor(new Regular(), SampleCt, 1);
+            Sampler antiAlias = new Sampler(
+                new Regular(),
+                new SquareDistribution(),
+                SampleCt,
+                1);
 
-            IMaterial transparentMat = new Transparent(Color.White, 0.5, 2500, 0.1, 1.5, 0.75);
-            IMaterial redMat = new PerfectReflective(Color.LightCoral, 0.8, 300, 0.2);
-            IMaterial greenMat = new PerfectReflective(Color.LightGreen, 0.1, 300, 0.9);
-            IMaterial blueMat = new PerfectReflective(Color.LightBlue, 0.1, 300, 0.9);
-            IMaterial planeMat = new PerfectReflective(Color.White, 0.5, 300, 0.5);
+            Func<Color, IMaterial> makeMat = c => new Phong(c, 0.9, 1, 500);
+            IMaterial redMat = new Reflective(Color.LightCoral, 0.4, 1, 1000, 0.6);
+            IMaterial greenMat = new Reflective(Color.LightGreen, 0.4, 1, 1000, 0.6);
+            IMaterial blueMat = new Reflective(Color.LightBlue, 0.4, 1, 1000, 0.6);
 
-            world.Add(new Sphere(new Vector3(-4, 0, 0), 2, greenMat));
-            world.Add(new Sphere(new Vector3(4, 0, 0), 2, redMat));
+            IMaterial banii = new Phong(Color.LightBlue, 0.9, 1, 100);
 
-            var transformation = new Transformation().Scale(1, 2, 1);
-            var instanced = new Sphere(new Vector3(0, 0, 0), 2, blueMat);
-            world.Add(transformation.Transform(instanced));
+            // Trzy różnokolorowe kule
+            List<IGeometricObject> objs = new List<IGeometricObject>();
 
-            //world.Add(new Instance(new Sphere(new Vector3(0, 0, 0), 2, greenMat))
-                //.Scale(1, 2, 1).Translate(5, 2, 0));
-            //world.Add(new Instance(new Sphere(new Vector3(0, 0, 0), 2, blueMat))
-                //.Scale(1, 2, 1).Translate(0, 2, 2));
-
-            
-            /*ObjMeshLoader loader = new ObjMeshLoader();
-            var meshData = loader.Load("mesh.obj");
-            var transformation = new Transformation();
-            TransformedGroup group = new TransformedGroup(transformation.Matrix);
-            foreach (var face in meshData.Faces)
+            /*var loader = new ObjMeshLoader();
+            var mesh = loader.Load("bunny69k.obj");
+            mesh.ComputeNormals();
+            foreach (var face in mesh.Faces)
             {
-                var instanced = new Face(face.A, face.B, face.C, transparentMat);
-                world.Add(instanced);
-            }
-            world.Add(group);*/
+                objs.Add(new Triangle(
+                    mesh.Verticles[face.A], mesh.Verticles[face.B], mesh.Verticles[face.C],
+                    mesh.Normals[face.A], mesh.Normals[face.B], mesh.Normals[face.C],
+                    whiteMat));
+            }*/
 
-            world.Add(new Plane(new Vector3(0, -2, 0), new Vector3(0, 1, 0), planeMat));
+            /*var grid = new Grid(objs);
+            var trans1 = new Transformation()
+                .Translate(0, -5, 0)
+                .RotateY(Math.PI * 3 / 2)
+                .Translate(-5, 0, 10);
 
-            world.AddLight(new Light(new Point(0, 10, 0), ColorRgb.White));
+            world.Add(new Transformed(trans1, grid, redMat));
 
-            ICamera camera = new Pinhole(new Vector3(0, 3, -12),
-                new Vector3(0, 0, 0),
-                new Vector3(0, -1, 0),
-                new Vector2(1280 / 1024f, 1),
-                2);
+            var trans2 = new Transformation()
+                .Translate(0, -5, 0)
+                .RotateY(Math.PI * 3 / 2)
+                .Translate(5, 0, 10);
+            world.Add(new Transformed(trans2, grid, greenMat));
 
-            Renderer renderer = new Renderer(MaxDepth);
+            var trans3 = new Transformation()
+                .Translate(0, -5, 0)
+                .RotateY(Math.PI - 0.1)
+                .Translate(0, 0, 15);
+            world.Add(new Transformed(trans3, grid, banii));*/
 
-            Bitmap image = renderer.Raytrace(world, camera, new Size(1280/4, 1024/4), antiAlias);
+world.Add(new Sphere(new Vector3(-3.5, 0, 0), 2,
+    new Reflective(Color.LightCoral, 0.7, 0.5, 1000, 0.3)));
+world.Add(new Sphere(new Vector3(3.5, 0, 0), 2,
+    new Reflective(Color.LightGreen, 0.7, 0.5, 1000, 0.3)));
+world.Add(new Sphere(new Vector3(0, 0, 3.5), 2,
+    new Reflective(Color.LightBlue, 0.7, 0.5, 1000, 0.3)));
+world.Add(new Sphere(new Vector3(0, 0, -3.5), 2,
+    new Transparent(Color.LightBlue, 0.1, 0, 0, 0.3, 1.05, 0.9)));
 
-            // Zapisanie obrazka w jakimś miłym miejscu na dysku.
-            image.Save("D:\\raytraced.png");
+world.Add(new Plane(new Vector3(0, -2, 0), new Vector3(0, 1, 0),
+    new Reflective(Color.White, 0.4, 0, 1000, 0.6, true)));
 
+world.AddLight(new Light(ColorRgb.White, new Vector3(-5, 5, -3)));
+
+ICamera camera = new Pinhole(new Vector3(6, 2, -15),
+    new Vector3(0, 0.3, 0),
+    new Vector3(0, -1, 0),
+    new Vector2(0.7, 0.7*1024/1280),
+    2);
+
+            var renderer = new StaticRenderer(MaxDepth);
+
+            // Raytracing!
+            Bitmap image = renderer.Raytrace(world, camera, new Size(1280/2, 1024/2), antiAlias);
+
+            image.Save("D:\\raytraced05.png");
             #region junks
 
             /*
@@ -88,23 +113,34 @@ namespace RayTutor
                 new Vector3(2, 3, 3), blueMat));*/
 
 
-            /*ISampler test = new NRooks(64, 0);
-            using (Bitmap b = new Bitmap(300, 300))
-            {
-                using (Graphics g = Graphics.FromImage(b))
-                {
-                    g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                    var r = test.Sample();
-                    foreach (var sample in r)
-                    {
-                        g.FillEllipse(Brushes.Black, (int)(sample.X * 300) - 5,
-                            (int)(sample.Y * 300) - 5,
-                            10, 10);
-                    }
-                }
+            /*            Sampler test = new Sampler(new PureRandom(0), new SquareDistribution(), 100, 1);
+                        using (Bitmap bm = new Bitmap(300, 300))
+                        {
+                            using (Graphics g = Graphics.FromImage(bm))
+                            {
+                                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                                for(int i = 0; i < 100; i++)
+                                {
+                                    Vector2 sample = test.Single();
 
-                b.Save("D:\\sampler.png");
-            }*/
+                                    double z = 2 * sample.X - 1;
+                                    double t = 2 * Math.PI * sample.Y;
+                                    double r = Math.Sqrt(1 - z * z);
+                                    Vector3 v = new Vector3(
+                                        r * Math.Cos(t),
+                                        r * Math.Sin(t),
+                                        z);
+
+
+                                    g.FillEllipse(Brushes.Black,
+                                        (int)(v.Z * 100) + 120 - 5,
+                                        (int)(v.X * 100) + 120 - 5,
+                                        10, 10);
+                                }
+                            }
+
+                            bm.Save("D:\\sampler.png");
+                        }*/
 
             /*
             ISampler test = new Jittered(64, 0);

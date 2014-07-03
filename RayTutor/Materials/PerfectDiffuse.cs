@@ -9,16 +9,25 @@
             this.materialColor = materialColor;
         }
 
-        public ColorRgb Radiance(Raytracer tracer, LightInfo light, HitInfo hit)
+        public ColorRgb Shade(Raytracer tracer, HitInfo hit)
         {
-            Vector3 inDirection = (light.Position - hit.HitPoint).Normalized;
-            double diffuseFactor = inDirection.Dot(hit.Normal);
+            ColorRgb total = ColorRgb.Black;
 
-            if (diffuseFactor < 0) { return ColorRgb.Black; }
+            foreach (var light in hit.World.Lights)
+            {
+                Vector3 position = light.Sample();
 
-            if (hit.World.AnyObstacleBetween(hit.HitPoint, light.Position)) { return ColorRgb.Black; }
+                Vector3 inDirection = (position - hit.HitPoint).Normalized;
+                double diffuseFactor = inDirection.Dot(hit.Normal);
 
-            return light.Color * materialColor * diffuseFactor;
+                if (diffuseFactor < 0) { continue; }
+
+                if (hit.World.AnyObstacleBetween(hit.HitPoint, position)) { continue; }
+
+                total += light.Color * materialColor * diffuseFactor;
+            }
+
+            return total;
         }
     }
 }

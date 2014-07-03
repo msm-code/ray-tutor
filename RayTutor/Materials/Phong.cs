@@ -5,36 +5,47 @@ namespace RayTutor
     {
         ITexture texture;
         double diffuseCoeff;
+        double specular;
         double specularExponent;
 
-        public Phong(ColorRgb materialColor, double diffuse, double exponent)
-            : this(new ConstColor(materialColor), diffuse, exponent) { }
+        public Phong(ColorRgb materialColor, double diffuse, double specular, double exponent)
+            : this(new ConstColor(materialColor), diffuse, specular, exponent) { }
 
-        public Phong(ITexture texture, double diffuse, double exponent)
+        public Phong(ITexture texture, double diffuse, double specular, double exponent)
         {
             this.texture = texture;
             this.diffuseCoeff = diffuse;
+            this.specular = specular;
             this.specularExponent = exponent;
         }
-
-        public ColorRgb Radiance(Raytracer tracer, LightInfo light, HitInfo hit)
+        
+        public ColorRgb Shade(Raytracer tracer, HitInfo hit)
         {
-            Vector3 inDirection = (light.Position - hit.HitPoint).Normalized;
-            double lambertFactor = inDirection.Dot(hit.Normal);
+            ColorRgb total = ColorRgb.Black;
 
-            if (lambertFactor < 0) { return ColorRgb.Black; }
+            foreach (var light in hit.World.Lights)
+            {
+                Vector3 position = light.Sample();
 
-            if (hit.World.AnyObstacleBetween(hit.HitPoint, light.Position)) { return ColorRgb.Black; }
+                Vector3 inDirection = (position - hit.HitPoint).Normalized;
+                double lambertFactor = inDirection.Dot(hit.Normal);
 
-            ColorRgb materialColor = texture.Get(hit);
-            ColorRgb result = light.Color * materialColor * lambertFactor * diffuseCoeff;
+                if (lambertFactor < 0) { continue; }
 
-            double phongFactor = PhongFactor(inDirection, hit.Normal, -hit.Ray.Direction);
+                if (hit.World.AnyObstacleBetween(hit.HitPoint, position)) { continue; }
 
-            if (phongFactor != 0)
-            { result += materialColor * phongFactor; }
+                ColorRgb materialColor = texture.Get(hit);
+                ColorRgb result = light.Color * materialColor * lambertFactor * diffuseCoeff;
 
-            return result;
+                double phongFactor = PhongFactor(inDirection, hit.Normal, -hit.Ray.Direction) * specular;
+
+                if (phongFactor != 0)
+                { result += materialColor * phongFactor; }
+
+                total += result;
+            }
+
+            return total;
         }
 
         double PhongFactor(Vector3 inDirection, Vector3 normal, Vector3 toCameraDirection)

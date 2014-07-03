@@ -2,26 +2,26 @@
 
 namespace RayTutor
 {
-    class Glossy : IMaterial
+    /*class Glossy : IMaterial
     {
         ColorRgb materialColor;
-        HemisphereDistributor distributor;
+        SampleSet<Vector3> distributor;
         double specularCoeff;
         double exponent;
         Phong direct;
 
-        public Glossy(ColorRgb color, double diffuse, HemisphereDistributor distributor, double speculer, double exponent)
+        public Glossy(ColorRgb color, double diffuse, SampleSet<Vector3> distributor, double specular, double exponent)
         {
-            this.direct = new Phong(color, diffuse, exponent);
+            this.direct = new Phong(color, diffuse, specular, exponent);
             this.materialColor = color;
             this.distributor = distributor;
-            this.specularCoeff = speculer;
+            this.specularCoeff = specular;
             this.exponent = exponent;
         }
 
-        public ColorRgb Radiance(Raytracer tracer, LightInfo light, HitInfo hit)
+        public ColorRgb Shade(Raytracer tracer, HitInfo hit)
         {
-            ColorRgb color = direct.Radiance(tracer, light, hit);
+            ColorRgb color = direct.Shade(tracer, hit);
 
             Vector3 toCameraDirection = -hit.Ray.Direction;
             Vector3 mirrorReflectionVec = Vector3.Reflect(toCameraDirection, hit.Normal);
@@ -50,5 +50,5 @@ namespace RayTutor
         }
 
         static readonly Vector3 Up = new Vector3(0, 1, 0);
-    }
+    }*/
 }

@@ -5,17 +5,17 @@ namespace RayTutor
 {
     class World
     {
-        List<GeometricObject> objects;
+        List<IGeometricObject> objects;
         List<Light> lights;
 
         public World(ColorRgb background)
         {
             this.BackgroundColor = background;
-            this.objects = new List<GeometricObject>();
+            this.objects = new List<IGeometricObject>();
             this.lights = new List<Light>();
         }
 
-        public void Add(GeometricObject obj)
+        public void Add(IGeometricObject obj)
         {
             objects.Add(obj);
         }
@@ -27,30 +27,30 @@ namespace RayTutor
 
         public HitInfo TraceRay(Ray ray)
         {
-            HitInfo result = new HitInfo();
-            Vector3 normal = default(Vector3);
-            double minimalDistance = Ray.Huge; // najbliższe trafienie
-            double lastDistance = 0; // zmienna pomocnicza, ostatnia odległość
+            double lastDistance = Ray.Huge;
+            IGeometricObject hitObject = null;
+            IntersectionInfo lastInfo = default(IntersectionInfo);
+            IntersectionInfo closestInfo = default(IntersectionInfo);
 
             foreach (var obj in objects)
             {
-                if (obj.HitTest(ray, ref lastDistance, ref normal) &&
-                    lastDistance < minimalDistance) // jeśli najbliższe trafienie
-                {
-                    minimalDistance = lastDistance; // nowa najmniejsza odległość
-                    result.HitObject = obj; // nowy trafiony obiekt
-                    result.Normal = normal;
-                }
+                double distance = obj.Intersection(ray, ref lastInfo);
+                if (distance > Ray.Epsilon && distance < lastDistance)
+                { lastDistance = distance; closestInfo = lastInfo; hitObject = obj; }
             }
 
-            if (result.HitObject != null) // jeśli trafiliśmy cokolwiek
+            if (hitObject != null) // jeśli trafiliśmy cokolwiek
             {
-                result.HitPoint = ray.Follow(minimalDistance);
-                result.Ray = ray;
-                result.World = this;
+                HitInfo info = new HitInfo();
+                info.Ray = ray;
+                info.World = this;
+                info.HitPoint = ray.Follow(lastDistance);
+                info.Normal = closestInfo.Normal;
+                info.Material = closestInfo.Material;
+                return info;
             }
 
-            return result;
+            return null;
         }
 
         public bool AnyObstacleBetween(Vector3 pointA, Vector3 pointB)
@@ -66,15 +66,15 @@ namespace RayTutor
 
         public bool AnyObstacleBefore(Vector3 pointB, Ray rayAB)
         {
-            double currDistance = Ray.Huge;
             double distAB = (rayAB.Origin - pointB).Length;
-            Vector3 ignoredNormal = default(Vector3);
+            IntersectionInfo ignoredInfo = default(IntersectionInfo);
             foreach (var obj in objects)
             {
                 // jeśli jakiś obiekt jest na drodze promienia oraz trafienie
                 // nastąpiło bliżej niż odległość punktu do światła,
                 // obiekt jest w cieniu
-                if (obj.HitTest(rayAB, ref currDistance, ref ignoredNormal) && currDistance < distAB)
+                double intersection = obj.Intersection(rayAB, ref ignoredInfo);
+                if (intersection > Ray.Epsilon && intersection < distAB)
                 { return true; }
             }
 
@@ -83,7 +83,7 @@ namespace RayTutor
         }
 
         public ColorRgb BackgroundColor { get; private set; }
-        public List<GeometricObject> Objects { get { return objects; } }
+        public List<IGeometricObject> Objects { get { return objects; } }
         public List<Light> Lights { get { return lights; } }
     }
 }

@@ -4,25 +4,25 @@
     {
         OrthonormalBasis onb;
         Vector3 origin;
-        Vector2 zoom;
+        Vector2 scale;
         double distance;
 
         public Pinhole(Vector3 origin,
             Vector3 lookAt,
             Vector3 up,
-            Vector2 zoom,
+            Vector2 scale, // !
             double distance)
         {
             this.onb = new OrthonormalBasis(origin - lookAt, up);
             this.origin = origin;
-            this.zoom = zoom;
+            this.scale = scale; // !
             this.distance = distance;
         }
 
-        public Ray GetRayTo(Vector2 relativeLoc)
+        public Ray GetRayTo(Vector2 relLoc)
         {
-            Vector2 viewPlaneLocation = new Vector2(relativeLoc.X * zoom.X, relativeLoc.Y * zoom.Y);
-            return new Ray(origin, RayDirection(viewPlaneLocation));
+            Vector2 vpLoc = new Vector2(relLoc.X * scale.X, relLoc.Y * scale.Y);
+            return new Ray(origin, RayDirection(vpLoc));
         }
 
         Vector3 RayDirection(Vector2 v)

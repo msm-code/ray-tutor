@@ -58,7 +58,7 @@ namespace RayTutor
             return normal * dot * 2 - vec;
         }
 
-        /*public static Vector3 ComponentMin(Vector3 a, Vector3 b)
+        public static Vector3 Min(Vector3 a, Vector3 b)
         {
             return new Vector3(
                 a.X < b.X ? a.X : b.X,
@@ -66,7 +66,7 @@ namespace RayTutor
                 a.Z < b.Z ? a.Z : b.Z);
         }
 
-        public static Vector3 ComponentMax(Vector3 a, Vector3 b)
+        public static Vector3 Max(Vector3 a, Vector3 b)
         {
             return new Vector3(
                 a.X < b.X ? b.X : a.X,
@@ -74,7 +74,7 @@ namespace RayTutor
                 a.Z < b.Z ? b.Z : a.Z);
         }
 
-        public static Vector3 ComponentMul(Vector3 a, Vector3 b)
+        /*public static Vector3 ComponentMul(Vector3 a, Vector3 b)
         { return new Vector3(a.X * b.X, a.Y * b.Y, a.Z * b.Z); }
 
         public static Vector3 ComponentDiv(Vector3 a, Vector3 b)
@@ -88,5 +88,10 @@ namespace RayTutor
 
         public Vector3 Normalized
         { get { return this / this.Length; } }
+
+        public override string ToString()
+        {
+            return string.Format(System.Globalization.CultureInfo.InvariantCulture, "[{0},{1},{2}]", X, Y, Z);
+        }
     }
 }

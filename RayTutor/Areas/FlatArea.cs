@@ -5,9 +5,9 @@
         Vector3 origin;
         ISamplableShape shape;
         OrthonormalBasis inverse;
-        SquareDistributor distributor;
+        Sampler distributor;
 
-        public FlatArea(ISamplableShape shape, Vector3 origin, OrthonormalBasis inverse, SquareDistributor distributor)
+        public FlatArea(ISamplableShape shape, Vector3 origin, OrthonormalBasis inverse, Sampler distributor)
         {
             this.shape = shape;
             this.inverse = inverse;

@@ -3,3 +3,8 @@ D:\Projects\C#\RayTutor\RayTutor\bin\Debug\RayTutor.pdb
 D:\Projects\C#\RayTutor\RayTutor\obj\Debug\ResolveAssemblyReference.cache
 D:\Projects\C#\RayTutor\RayTutor\obj\Debug\RayTutor.exe
 D:\Projects\C#\RayTutor\RayTutor\obj\Debug\RayTutor.pdb
+D:\Code\C#\RayTutor\RayTutor\obj\Debug\RayTutor.exe
+D:\Code\C#\RayTutor\RayTutor\obj\Debug\RayTutor.pdb
+D:\Code\C#\RayTutor\RayTutor\obj\Debug\ResolveAssemblyReference.cache
+D:\Code\C#\RayTutor\RayTutor\bin\Debug\RayTutor.exe
+D:\Code\C#\RayTutor\RayTutor\bin\Debug\RayTutor.pdb

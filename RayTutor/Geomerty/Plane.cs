@@ -1,33 +1,27 @@
 ﻿using System.Drawing;
 namespace RayTutor
 {
-    class Plane : GeometricObject
+    class Plane : IGeometricObject
     {
-        /// <summary>Punkt przez który płaszczyzna przechodzi</summary>
+        IMaterial material;
         Vector3 point;
-
-        /// <summary>Normalna do płaszczyzny</summary>
         Vector3 normal;
 
         public Plane(Vector3 point, Vector3 normal, IMaterial material)
         {
             this.point = point;
             this.normal = normal.Normalized;
-            base.Material = material;
+            this.material = material;
         }
 
-        public override bool HitTest(Ray ray, ref double distance, ref Vector3 outNormal)
+        public double Intersection(Ray ray, ref IntersectionInfo info)
         {
-            double t = (point - ray.Origin).Dot(normal) / ray.Direction.Dot(normal);
-
-            if (t > Ray.Epsilon)
-            {
-                distance = t;
-                outNormal = normal;
-                return true;
-            }
-
-            return false;
+            info.Normal = this.normal;
+            info.Material = this.material;
+            return (point - ray.Origin).Dot(normal) / ray.Direction.Dot(normal);
         }
+
+        public Aabb BoundingBox
+        {get { throw new System.InvalidOperationException(); }}
     }
 }

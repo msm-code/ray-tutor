@@ -1,31 +1,52 @@
 ﻿using RayTutor.Transformations;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace RayTutor.Geomerty
 {
-    class TransformedObject : GeometricObject
+    class Transformed : IGeometricObject
     {
-        GeometricObject instanced;
+        IGeometricObject instanced;
+        Matrix transform;
         Matrix invTransform;
 
-        public TransformedObject(Matrix invTransform, GeometricObject instanced)
+        public Transformed(Transformation transformation, IGeometricObject instanced)
         {
-            this.Material = instanced.Material;
-            this.invTransform = invTransform;
+            this.invTransform = transformation.InvMatrix;
+            this.transform = transformation.Matrix;
             this.instanced = instanced;
+
+            Aabb nestedBox = instanced.BoundingBox;
+
+            IEnumerable<Vector3> boundsVerticles = nestedBox.Verticles
+                .Select((x) => transform.TransformPoint(x));
+            BoundingBox = Aabb.Point(boundsVerticles.First());
+
+            foreach (var vertex in boundsVerticles)
+            { BoundingBox = BoundingBox.Wrap(vertex); }
         }
 
-        public override bool HitTest(Ray ray, ref double distance, ref Vector3 normal)
+        public Transformed(Transformation transformation, IGeometricObject instanced, IMaterial matOverride)
+            :this(transformation, instanced)
+        {
+            this.MaterialOverride = matOverride;
+        }
+
+        public double Intersection(Ray ray, ref IntersectionInfo info)
         {
             Ray invRay = new Ray(
                 invTransform.TransformPoint(ray.Origin),
                 invTransform.TransformVector(ray.Direction));
 
-            bool hit = instanced.HitTest(invRay, ref distance, ref normal);
+            double intersection = instanced.Intersection(invRay, ref info);
+            if (Ray.IsValid(intersection)) { info.Normal = invTransform.TransformNormal(info.Normal).Normalized; }
 
-            if (!hit) { return false; }
+            if (MaterialOverride != null) { info.Material = MaterialOverride; }
 
-            normal = invTransform.TransformNormal(normal).Normalized;
-
-            return true;
+            return intersection;
         }
+
+        public IMaterial MaterialOverride { get; private set; }
+        public Aabb BoundingBox { get; private set; }
     }
 }

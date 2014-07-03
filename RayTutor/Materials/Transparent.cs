@@ -6,92 +6,79 @@ namespace RayTutor
     {
         Phong direct;
         double refraction;
+        double reflection;
         double transmission;
         double specular;
         ColorRgb baseColor;
 
-        public Transparent(ColorRgb color,
-            double diffuse, 
-            double exponent, 
-            double specular, 
-            double refraction, 
-            double transmission)
+        public Transparent(ColorRgb color, double diffuse, double specular,
+            double exponent, double reflection, double refraction, double transmission)
         {
-            this.direct = new Phong(color, diffuse, exponent);
+            this.direct = new Phong(color, diffuse, specular, exponent);
             this.transmission = transmission;
             this.baseColor = color;
+            this.reflection = reflection;
             this.specular = specular;
             this.refraction = refraction;
         }
 
-        public ColorRgb Radiance(Raytracer tracer, LightInfo light, HitInfo hit)
+        public ColorRgb Shade(Raytracer tracer, HitInfo hit)
         {
-            ColorRgb final = direct.Radiance(tracer, light, hit);
+            ColorRgb final = direct.Shade(tracer, hit);
 
-            Vector3 normal = hit.Normal;
             Vector3 toCameraDirection = -hit.Ray.Direction;
+            double cosIncidentAngle = hit.Normal.Dot(toCameraDirection);
+            double eta = cosIncidentAngle > 0 ? refraction : 1 / refraction;
+            double refractionCoeff = FindRefractionCoeff(eta, cosIncidentAngle);
 
-            Vector3 reflectionDirection = Vector3.Reflect(toCameraDirection, normal);
-            ColorRgb reflectionColor = GetSpecularColor(normal, reflectionDirection, toCameraDirection);
-            Ray reflectedRay = new Ray(hit.HitPoint, reflectionDirection);
+            Ray reflectedRay = new Ray(hit.HitPoint, Vector3.Reflect(toCameraDirection, hit.Normal));
+            ColorRgb reflectionColor = baseColor * reflection;
 
-            if (IsTotalInternalReflection(hit))
+            if (IsTotalInternalReflection(refractionCoeff))
             {
                 final += tracer.TraceRay(hit.World, reflectedRay, hit.Depth);
             }
             else
             {
-                Vector3 transmissionDirection;
-                ColorRgb transmissionColor = GetTransmissionColor(normal, out transmissionDirection, toCameraDirection);
-                Ray transmittedRay = new Ray(hit.HitPoint, transmissionDirection);
+                Ray transmittedRay = ComputeTransmissionDirection(hit.HitPoint, toCameraDirection,
+                    hit.Normal, eta, Math.Sqrt(refractionCoeff), cosIncidentAngle);
+                ColorRgb transmissionColor = ComputeTransmissionColor(
+                    eta, hit.Normal, transmittedRay.Direction);
 
-                final += reflectionColor *
-                    tracer.TraceRay(hit.World, reflectedRay, hit.Depth) *
-                    Math.Abs(hit.Normal.Dot(reflectionDirection));
-
-                final += transmissionColor *
-                    tracer.TraceRay(hit.World, transmittedRay, hit.Depth) *
-                    Math.Abs(hit.Normal.Dot(transmissionDirection));
+                final += reflectionColor * tracer.TraceRay(hit.World, reflectedRay, hit.Depth);
+                final += transmissionColor * tracer.TraceRay(hit.World, transmittedRay, hit.Depth);
             }
 
             return final;
         }
 
-        public ColorRgb GetTransmissionColor(Vector3 normal, out Vector3 transmissionDirection, Vector3 toCameraDirection)
+        Ray ComputeTransmissionDirection(Vector3 hitPoint, Vector3 toCameraDirection, Vector3 normal,
+            double eta, double cosTransmittedAngle, double cosIncidentAngle)
         {
-            double cosNormalToCamera = normal.Dot(toCameraDirection);
-            double eta = refraction;
-
-            if (cosNormalToCamera < 0)
+            if (cosIncidentAngle < 0)
             {
-                cosNormalToCamera = -cosNormalToCamera;
                 normal = -normal;
-                eta = 1 / eta;
+                cosIncidentAngle = -cosIncidentAngle;
             }
 
-            double cosTransmission = Math.Sqrt(1 - (1 - cosNormalToCamera * cosNormalToCamera) / (eta * eta));
-
-            transmissionDirection = -toCameraDirection / eta -
-                normal * (cosTransmission - cosNormalToCamera / eta);
-
-            return ColorRgb.White * transmission / (eta * eta * Math.Abs(normal.Dot(transmissionDirection)));
+            Vector3 direction = -toCameraDirection / eta
+                - normal * (cosTransmittedAngle - cosIncidentAngle / eta);
+            return new Ray(hitPoint, direction);
         }
 
-        public bool IsTotalInternalReflection(HitInfo hit)
+        ColorRgb ComputeTransmissionColor(double eta, Vector3 normal, Vector3 transmissionDirection)
         {
-            Vector3 toCameraDirection = -hit.Ray.Direction;
-            double cosNormalToCamera = hit.Normal.Dot(toCameraDirection);
-            double eta = refraction;
-
-            if (cosNormalToCamera < 0)
-            { eta = 1 / eta; }
-
-            return (1 - (1 - cosNormalToCamera * cosNormalToCamera) / (eta * eta) < 0);
+            return ((ColorRgb.White * transmission) / (eta * eta));
         }
 
-        public ColorRgb GetSpecularColor(Vector3 normal, Vector3 inDirection, Vector3 outDirection)
+        double FindRefractionCoeff(double eta, double cosIncidentAngle)
         {
-            return (baseColor * specular) / normal.Dot(inDirection);
+            return 1 - (1 - cosIncidentAngle * cosIncidentAngle) / (eta * eta);
+        }
+
+        bool IsTotalInternalReflection(double refractionCoeff)
+        {
+            return refractionCoeff < 0;
         }
     }
 }

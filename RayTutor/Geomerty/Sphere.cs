@@ -2,8 +2,9 @@
 using System;
 namespace RayTutor
 {
-    class Sphere : GeometricObject
+    class Sphere : IGeometricObject
     {
+        IMaterial material;
         Vector3 center;
         double radius;
 
@@ -11,10 +12,13 @@ namespace RayTutor
         {
             this.center = center;
             this.radius = radius;
-            base.Material = material;
+            this.material = material;
+
+            Vector3 size = new Vector3(radius, radius, radius);
+            this.BoundingBox = new Aabb(center - size, center + size);
         }
 
-        public override bool HitTest(Ray ray, ref double minDistance, ref Vector3 outNormal)
+        public double Intersection(Ray ray, ref IntersectionInfo info)
         {
             double t;
             Vector3 distance = ray.Origin - center;
@@ -24,7 +28,7 @@ namespace RayTutor
             double c = distance.LengthSq - radius * radius;
             double disc = b * b - 4 * a * c;
 
-            if (disc < 0) { return false; }
+            if (disc < 0) { return Ray.Huge; }
 
             double discSq = Math.Sqrt(disc);
             double denom = 2 * a;
@@ -32,13 +36,13 @@ namespace RayTutor
             t = (-b - discSq) / denom;
             if (t < Ray.Epsilon)
             { t = (-b + discSq) / denom; }
-            if (t < Ray.Epsilon)
-            { return false; }
 
-            Vector3 hitPoint = ray.Follow(t);
-            outNormal = (hitPoint - center).Normalized;
-            minDistance = t;
-            return true;
+            info.Material = this.material;
+            info.Normal = (ray.Follow(t) - this.center).Normalized;
+
+            return t;
         }
+
+        public Aabb BoundingBox { get; private set; }
     }
 }

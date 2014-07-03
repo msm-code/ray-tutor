@@ -2,40 +2,40 @@
 
 namespace RayTutor
 {
-    class NRooks : ISampler
+class NRooks : ISampleGenerator
+{
+    Random r;
+
+    public NRooks(int seed)
     {
-        Random r;
+        this.r = new Random(seed);
+    }
 
-        public NRooks(int seed)
+    public Vector2[] Sample(int sampleCt)
+    {
+        Vector2[] samples = new Vector2[sampleCt];
+
+        for (int i = 0; i < sampleCt; i++)
         {
-            this.r = new Random(seed);
+            samples[i] = new Vector2(
+                (i + r.NextDouble()) / sampleCt,
+                (i + r.NextDouble()) / sampleCt);
         }
 
-        public Vector2[] Sample(int sampleCt)
+        ShuffleX(samples, sampleCt);
+
+        return samples;
+    }
+
+    void ShuffleX(Vector2[] samples, int sampleCt)
+    {
+        for (int i = 0; i < sampleCt - 1; i++)
         {
-            Vector2[] samples = new Vector2[sampleCt];
-
-            for (int i = 0; i < sampleCt; i++)
-            {
-                samples[i] = new Vector2(
-                    (i + r.NextDouble()) / sampleCt,
-                    (i + r.NextDouble()) / sampleCt);
-            }
-
-            ShuffleX(samples, sampleCt);
-
-            return samples;
-        }
-
-        void ShuffleX(Vector2[] samples, int sampleCt)
-        {
-            for (int i = 0; i < sampleCt - 1; i++)
-            {
-                int target = r.Next() % sampleCt;
-                double temp = samples[i].X;
-                samples[i].X = samples[target].X;
-                samples[target].X = temp;
-            }
+            int target = r.Next() % sampleCt;
+            double temp = samples[i].X;
+            samples[i].X = samples[target].X;
+            samples[target].X = temp;
         }
     }
+}
 }

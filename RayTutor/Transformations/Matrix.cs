@@ -21,7 +21,8 @@ namespace RayTutor.Transformations
                 return new Matrix(new double[] {
                     1, 0, 0, 0,
                     0, 1, 0, 0,
-                    0, 0, 1, 0});
+                    0, 0, 1, 0,
+                    0, 0, 0, 1});
             }
         }
 
@@ -30,7 +31,8 @@ namespace RayTutor.Transformations
             return new Matrix(new double[] {
                 1, 0, 0, x,
                 0, 1, 0, y,
-                0, 0, 1, z });
+                0, 0, 1, z,
+                0, 0, 0, 1});
         }
 
         public static Matrix Scale(double x, double y, double z)
@@ -38,7 +40,8 @@ namespace RayTutor.Transformations
             return new Matrix(new double[] {
                 x, 0, 0, 0,
                 0, y, 0, 0,
-                0, 0, z, 0 });
+                0, 0, z, 0,
+                0, 0, 0, 1});
         }
 
         public static Matrix RotateX(double angle)
@@ -46,7 +49,8 @@ namespace RayTutor.Transformations
             return new Matrix(new double[] {
                 1, 0,               0,                0,
                 0, Math.Cos(angle), -Math.Sin(angle), 0,
-                0, Math.Sin(angle), Math.Cos(angle),  0});
+                0, Math.Sin(angle), Math.Cos(angle),  0,
+                0, 0,               0,                1});
         }
 
         public static Matrix RotateY(double angle)
@@ -54,7 +58,8 @@ namespace RayTutor.Transformations
             return new Matrix(new double[] {
                 Math.Cos(angle),  0, Math.Sin(angle),  0,
                 0,                1, 0,                0,
-                -Math.Sin(angle), 0, Math.Cos(angle),  0});
+                -Math.Sin(angle), 0, Math.Cos(angle),  0,
+                0,                0, 0,                1});
         }
 
         public static Matrix RotateZ(double angle)
@@ -62,7 +67,8 @@ namespace RayTutor.Transformations
             return new Matrix(new double[] {
                 Math.Cos(angle), -Math.Sin(angle), 0, 0,
                 Math.Sin(angle), Math.Cos(angle),  0, 0,
-                0,               0,                1, 0});
+                0,               0,                1, 0,
+                0,               0,                0, 1});
         }
 
         public static Matrix operator *(Matrix m0, Matrix m1)
@@ -72,7 +78,7 @@ namespace RayTutor.Transformations
                 for (int y = 0; y < 3; y++)
                 {
                     double total = 0;
-                    for (int i = 0; i < 3; i++)
+                    for (int i = 0; i < 4; i++)
                         total += m0[i, y] * m1[x, i];
 
                     result[x, y] = total;

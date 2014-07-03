@@ -2,7 +2,7 @@
 
 namespace RayTutor
 {
-    class Jittered : ISampler
+    class Jittered : ISampleGenerator
     {
         Random r;
 

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,8 +10,13 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RayTutor</RootNamespace>
     <AssemblyName>RayTutor</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -36,6 +41,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -46,40 +52,41 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Aabb.cs" />
+    <Compile Include="Areas\SphereArea.cs" />
     <Compile Include="Cameras\ThinLens.cs" />
     <Compile Include="Distributors\DiskDistributor.cs" />
-    <Compile Include="Distributors\HemisphereDistributor.cs" />
-    <Compile Include="Distributors\SquareDistributor.cs" />
-    <Compile Include="Geomerty\Face.cs" />
-    <Compile Include="Geomerty\Octree.cs" />
-    <Compile Include="Geomerty\TransformedGroup.cs" />
+    <Compile Include="Distributors\HemisphereDistribution.cs" />
+    <Compile Include="Distributors\ISampleDistribution.cs" />
+    <Compile Include="Distributors\SquareDistribution.cs" />
+    <Compile Include="Geomerty\Composite.cs" />
+    <Compile Include="Geomerty\Triangle.cs" />
+    <Compile Include="Geomerty\Grid.cs" />
     <Compile Include="Geomerty\TransformedObject.cs" />
-    <Compile Include="Geomerty\Mesh.cs" />
     <Compile Include="Materials\Transparent.cs" />
+    <Compile Include="MathExt.cs" />
     <Compile Include="Transformations\Matrix.cs" />
     <Compile Include="Meshes\MeshInfo.cs" />
-    <Compile Include="Meshes\ObjLoaderContext.cs" />
     <Compile Include="Meshes\ObjMeshLoader.cs" />
-    <Compile Include="Renderer\ConsoleRenderer.cs" />
+    <Compile Include="Renderer\StaticRenderer.cs" />
     <Compile Include="Samplers\NRooks.cs" />
     <Compile Include="Shapes\Disk.cs" />
     <Compile Include="Areas\FlatArea.cs" />
     <Compile Include="Areas\IArea2d.cs" />
     <Compile Include="Light.cs" />
     <Compile Include="ColorRgb.cs" />
-    <Compile Include="Distributors\Distributor.cs" />
+    <Compile Include="Distributors\Sampler.cs" />
     <Compile Include="Materials\Glossy.cs" />
     <Compile Include="Areas\IArea.cs" />
     <Compile Include="Cameras\ICamera.cs" />
-    <Compile Include="Geomerty\GeometricObject.cs" />
+    <Compile Include="Geomerty\IGeometricObject.cs" />
     <Compile Include="HitInfo.cs" />
     <Compile Include="Materials\IMaterial.cs" />
-    <Compile Include="Samplers\ISampler.cs" />
+    <Compile Include="Samplers\ISampleGenerator.cs" />
     <Compile Include="Shapes\IShape.cs" />
     <Compile Include="Samplers\Jittered.cs" />
-    <Compile Include="LightInfo.cs" />
     <Compile Include="Matrix3.cs" />
-    <Compile Include="Materials\PerfectReflective.cs" />
+    <Compile Include="Materials\Reflective.cs" />
     <Compile Include="Materials\Phong.cs" />
     <Compile Include="Areas\Point.cs" />
     <Compile Include="PointLight.cs" />
@@ -97,7 +104,6 @@
     <Compile Include="Shapes\Rectangle.cs" />
     <Compile Include="Samplers\Regular.cs" />
     <Compile Include="Geomerty\Sphere.cs" />
-    <Compile Include="Geomerty\FlatObject.cs" />
     <Compile Include="Shapes\Triangle.cs" />
     <Compile Include="Textures\Checker.cs" />
     <Compile Include="Textures\ConstColor.cs" />

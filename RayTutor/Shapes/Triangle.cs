@@ -1,5 +1,6 @@
 ﻿namespace RayTutor
 {
+    /*
     class Triangle : IShape, ISamplableShape
     {
         // algorithm: http://www.blackpawn.com/texts/pointinpoly/default.html
@@ -55,5 +56,5 @@
 
             return a + vB * sample.X + vC * sample.Y;
         }
-    }
+    }*/
 }
