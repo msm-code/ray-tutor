@@ -15,7 +15,7 @@ reflections:
 
 ![reflect](https://github.com/msm-code/ray-tutor/raw/master/demo/reflect.png)
 
-![reflect_sierp](https://github.com/msm-code/ray-tutor/raw/master/demo/reflect_sierp.jpg)
+![reflect_sierp](https://github.com/msm-code/ray-tutor/raw/master/demo/reflect_sierp.png)
 
 refraction and transparency:
 ----------------------------
